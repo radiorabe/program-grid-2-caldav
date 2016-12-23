@@ -1,0 +1,23 @@
+{
+  "name": "program-grid-2-caldav",
+  "version": "0.0.0",
+  "description": "transpose next shows from airtime api to CalDAV",
+  "main": "index.js",
+  "author": "Lucas Bickel <hairmare@rabe.ch>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/radiorabe/program-grid-2-caldav"
+  },
+  "keywords": [
+    "airtime",
+    "caldav",
+    "ical",
+    "radio"
+  ],
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "ical-generator": "^0.2.9",
+    "request": "^2.79.0",
+    "throttled-request": "^0.1.1"
+  }
+}

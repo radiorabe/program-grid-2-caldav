@@ -31,3 +31,9 @@ uses the following variables.
 | CALDAV_ENDPOINT | Full URL to CalDAV calendar (with trailing slash) | `http://calendar.vcap.me/grid/calendar.ics/`
 | REQUEST_THROTTLE_NUM | Number of CalDAV requests per REQUEST_THROTTLE_TIME | `1`
 | REQUEST_THROTTLE_TIME | Time in ms over which REQUEST_THROTTLE_NUM CalDAV requests get sent | `200`
+
+## Testing
+
+```bash
+npm test
+```

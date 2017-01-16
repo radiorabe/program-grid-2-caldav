@@ -1,7 +1,7 @@
 var request = require('request'),
-    throttledRequest = require('throttled-request')(request),
     ical = require('ical-generator'),
-    url = require('url');
+    url = require('url'),
+    util = require('util');
 
 var config = {};
 
@@ -10,12 +10,6 @@ function configure() {
   return {
     airtime: process.env.AIRTIME_ENDPOINT || 'http://airtime.vcap.me/api/live-info-v2?days=60&shows=600000000',
     caldav: process.env.CALDAV_ENDPOINT || 'http://calendar.vcap.me/grid/calendar.ics/',
-    throttle: {
-      caldav: {
-        num: parseInt(process.env.REQUEST_THROTTLE_NUM) || 1,
-        time: parseInt(process.env.REQUEST_THROTTLE_TIME) || 200,
-      }
-    }
   };
 }
 
@@ -43,36 +37,32 @@ function populateFromJson(data) {
 
 // send individual records to radicale (server upserts based on uid value)
 function storeEvent(uid, body) {
-  throttledRequest({
-    method: 'PUT',
+  var options = {
     url: config.caldav + uid,
-    headers: {
-      'Content-Type': 'text/calendar; charset=utf-8'
-    },
+    headers: { 'Content-Type': 'text/calendar; charset=utf-8' },
     body: body
-  }, function(err, res) {
+  };
+  request.put(options, function(err, res) {
     if (err) {
-      console.log('Error storing data to CalDAV');
+      util.log('Error talking to CalDAV: ' + err.code + ' while writing record: ' + uid );
     } else if (res.statusCode != 201) {
-      console.log('Error creating record ' + uid);
+      util.log('Error creating record: ' + uid);
     }
   });
 }
 
 // fetch data from airtime api
 function main() {
-  // throttling used to make sure CalDAV server is not overwhelmed
-  throttledRequest.configure({
-    requests: config.throttle.caldav.num,
-    milliseconds: config.throttle.caldav.time,
-  });
-
   request.get({
     url: config.airtime,
     json: true
   }, function (err, jsonRes, data) {
     if (err) {
-      console.log('Error from Airtime API');
+      if (jsonRes.statusCode !== 200) {
+        util.log('Error from Airtime API: ' + jsonRes.statusCode);
+      } else {
+        util.log('Unknown error from Airtime API');
+      }
     } else {
       populateFromJson(data);
     }

@@ -16,7 +16,8 @@
   ],
   "license": "AGPL-3.0",
   "scripts": {
-    "test": "NODE_ENV=test mocha"
+    "test": "NODE_ENV=test mocha",
+    "coverage": "NODE_ENV=test istanbul cover _mocha"
   },
   "dependencies": {
     "ical-generator": "^0.2.9",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "node-mocks-http": "^1.5.5",
     "sinon": "^1.17.6",

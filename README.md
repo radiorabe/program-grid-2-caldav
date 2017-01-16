@@ -36,4 +36,7 @@ uses the following variables.
 
 ```bash
 npm test
+
+# coverage info
+npm run coverage
 ```

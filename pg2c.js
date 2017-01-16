@@ -1,5 +1,6 @@
 var request = require('request'),
     ical = require('ical-generator'),
+    moment = require('moment-timezone'),
     url = require('url'),
     util = require('util');
 
@@ -15,6 +16,7 @@ function configure() {
 
 // create ical events based on data from api
 function populateFromJson(data) {
+  var stationTz = data.station.timezone;
   data.shows.next.map(function(show) {
     var uid = show.id + "-" + show.instance_id;
     var properUrl = show.url === '' && 'http://rabe.ch' || show.url;
@@ -22,8 +24,8 @@ function populateFromJson(data) {
     var cal = ical({domain: url.parse(config.caldav).hostname, name: "Grid"});
     var event = cal.createEvent({
       uid: uid,
-      start: new Date(Date.parse(show.starts)),
-      end: new Date(Date.parse(show.ends)),
+      start: moment.tz(show.starts, stationTz).toDate(),
+      end: moment.tz(show.ends, stationTz).toDate(),
       summary: show.name,
       description: show.description,
       url: properUrl,

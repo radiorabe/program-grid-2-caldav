@@ -10,6 +10,9 @@ var request = require('request'),
 chai.use(sinonChai);
 
 var single_content = {
+  station: {
+    timezone: "Europe/Zurich",
+  },
   shows: {
     next: [
       {
@@ -55,6 +58,9 @@ describe('program-grid-2-caldav', function () {
   });
   it('should make a request to the airtime api', function() {
     var content = {
+      station: {
+        timezone: "Europe/Zurich",
+      },
       shows: {
         next: [],
       },

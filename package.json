@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "ical-generator": "^0.2.9",
+    "moment-timezone": "^0.5.11",
     "request": "^2.79.0"
   },
   "devDependencies": {

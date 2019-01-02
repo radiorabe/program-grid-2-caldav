@@ -9,7 +9,7 @@ Proof of concept code to transpose data from airtimes /api/live-info-v2 API to a
 ## Installation
 
 ```bash
-npm install
+yarn install
 ```
 
 ## Usage
@@ -33,8 +33,8 @@ uses the following variables.
 ## Testing
 
 ```bash
-npm test
+yarn test
 
 # coverage info
-npm run coverage
+yarn run coverage
 ```

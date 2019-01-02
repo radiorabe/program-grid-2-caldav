@@ -32,7 +32,7 @@ var single_content = {
 };
 
 beforeEach(function () {
-  this.sinon = sinon.sandbox.create();
+  this.sinon = sinon.createSandbox();
   this.clock = sinon.useFakeTimers();
 });
 
@@ -65,7 +65,7 @@ describe('program-grid-2-caldav', function () {
         next: [],
       },
     };
-    var requestStub = this.sinon.stub(request, 'get', function (url, cb) {
+    var requestStub = this.sinon.stub(request, 'get').callsFake(function (url, cb) {
       var res = httpMocks.createResponse();
       res.statusCode = 201;
       cb(false, res, content);
@@ -99,13 +99,13 @@ describe('program-grid-2-caldav', function () {
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
-    var airtimeStub = this.sinon.stub(request, 'get', function (url, cb) {
+    var airtimeStub = this.sinon.stub(request, 'get').callsFake(function (url, cb) {
       var res = httpMocks.createResponse();
       res.statusCode = 201;
       cb(false, res, single_content);
     });
 
-    var caldavStub = this.sinon.stub(request, 'put', function (options, cb) {
+    var caldavStub = this.sinon.stub(request, 'put').callsFake(function (options, cb) {
       var res = httpMocks.createResponse();
       res.statusCode = 201;
       cb(false, res, null);
@@ -121,7 +121,7 @@ describe('program-grid-2-caldav', function () {
     expect(caldavStub).to.always.have.been.calledWith(sinon.match.has('body', card));
   });
   it('should log errors if airtime fails', function() {
-    var airtimeStub = this.sinon.stub(request, 'get', function (url, cb) {
+    var airtimeStub = this.sinon.stub(request, 'get').callsFake(function (url, cb) {
       cb({ code: 'error'}, httpMocks.createResponse(), null);
     });
 
@@ -133,7 +133,7 @@ describe('program-grid-2-caldav', function () {
     expect(logStub).to.have.been.calledWith(sinon.match('Unknown error from Airtime API'));
   });
   it('should log errors if airtime returns 500', function() {
-    var airtimeStub = this.sinon.stub(request, 'get', function (url, cb) {
+    var airtimeStub = this.sinon.stub(request, 'get').callsFake(function (url, cb) {
       res = httpMocks.createResponse();
       res.statusCode = 500;
       cb({ code: 'error' }, res, null);
@@ -147,10 +147,10 @@ describe('program-grid-2-caldav', function () {
     expect(logStub).to.have.been.calledWith(sinon.match('Error from Airtime API: 500'));
   });
   it('should log errors if caldav fails', function() {
-    var airtimeStub = this.sinon.stub(request, 'get', function (url, cb) {
+    var airtimeStub = this.sinon.stub(request, 'get').callsFake(function (url, cb) {
       cb(null, httpMocks.createResponse(), single_content);
     });
-    var caldavStub = this.sinon.stub(request, 'put', function (options, cb) {
+    var caldavStub = this.sinon.stub(request, 'put').callsFake(function (options, cb) {
       cb({ code: 'error' }, null, null);
     });
     var logStub = this.sinon.stub(util, 'log');
@@ -161,10 +161,10 @@ describe('program-grid-2-caldav', function () {
     expect(logStub).to.have.been.calledWith(sinon.match('Error talking to CalDAV'));
   });
   it('should log errors if card is rejected by server', function() {
-    var airtimeStub = this.sinon.stub(request, 'get', function (url, cb) {
+    var airtimeStub = this.sinon.stub(request, 'get').callsFake(function (url, cb) {
       cb(null, httpMocks.createResponse(), single_content);
     });
-    var caldavStub = this.sinon.stub(request, 'put', function (options, cb) {
+    var caldavStub = this.sinon.stub(request, 'put').callsFake(function (options, cb) {
       var res = httpMocks.createResponse();
       res.statusCode = 500;
       cb(false, res, null);
